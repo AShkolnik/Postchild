@@ -1,6 +1,9 @@
 # Postchild
 
-This is the repository for the Hackathon participation on the boot.dev platform. The idea is to write a smaller version of postman application.
+This is the repository for the Hackathon participation on the [boot.dev](https://www.boot.dev) platform. The idea is to write a smaller version of Postman application.
+For those not familiar with Postman, to simplify it, it's an application for testing API Endpoints with POST and GET requests and add visualisation to it, store the requests and responses in files and more. Postchild will try to replicate some of the most used features.
+
+The application is written with the Tauri Framework with Svelte for the frontend using TailWindCSS and Rust for the backend.
 
 # sv
 
