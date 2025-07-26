@@ -1,3 +1,5 @@
+import type { AuthType } from "./auth_type";
+
 interface Cookie {
 	name: string;
 	value: string;
@@ -24,9 +26,10 @@ interface HttpResponse {
 interface HttpRequest {
 	method: HttpMethod;
 	url: string;
+	authorization: AuthType;
 	headers?: Record<string, string>;
 	body?: string | object;
-	params?: Record<string, string>;
+	params?: Record<'key' | 'value', string>;
 }
 
 export const HttpMethod = {
@@ -41,4 +44,4 @@ export const HttpMethod = {
 
 export type HttpMethod = typeof HttpMethod[keyof typeof HttpMethod];
 
-export type { Cookie, Header, HttpResponse };
+export type { Cookie, Header, HttpResponse, HttpRequest };

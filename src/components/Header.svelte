@@ -4,10 +4,13 @@
 	import type { HttpResponse } from '$lib/network/http';
 
 	async function request(http_method: String, url: String) {
-		const result: HttpResponse | null = await invoke('request', { http_method, url });
-		http_response.set(result);
-
-		console.log(result);
+		try {
+			const result: HttpResponse | null = await invoke('request', { http_method, url });
+			http_response.set(result);
+			console.log(result);
+		} catch (error) {
+			console.error('Error:', error);
+		}
 	}
 
 	let input_url = '';

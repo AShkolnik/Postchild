@@ -1,32 +1,38 @@
 <script lang="ts">
 	import { AuthType } from '$lib/network/auth_type';
-	import type { Cookie, Header, HttpResponse } from '$lib/network/http';
+	import type { Cookie, Header, HttpResponse, HttpRequest } from '$lib/network/http';
 	import { TableEntry } from '$lib/utils/table_entry';
-	import { http_response } from '$lib/state/store';
+	import { http_response, http_request } from '$lib/state/store';
 
-	let response_tabs = [] as HttpResponse[];
-	let request_tabs = [];
+	interface ResponseTabs {
+		name: string;
+		active: boolean;
+		content: any;
+	}
+
+	interface RequestTabs {
+		name: string;
+		active: boolean;
+		content: any;
+	}
+
+	let response_tabs = [] as ResponseTabs[];
+	let request_tabs = [] as RequestTabs[];
 
 	let responseJson = '';
 	let active = 'tab_params';
 
-	let request_tabs = [
-		{ name: 'Params', active: true, content: [] as TableEntry[] },
-		{ name: 'Authorization', active: false, content: AuthType.None },
-		{ name: 'Headers', active: false, content: [] as TableEntry[] }
-	];
-
 	$: if ($http_request) {
 		request_tabs = [
-			{ name: 'Body', active: true, content: $http_request.body },
-			{ name: 'Cookies', active: false, content: $http_request.cookies },
+			{ name: 'Params', active: true, content: $http_request.params },
+			{ name: 'Authorization', active: false, content: $http_request.authorization },
 			{ name: 'Headers', active: false, content: $http_request.headers }
 		];
 	} else {
 		request_tabs = [
-			{ name: 'Body', active: true, content: '' },
-			{ name: 'Cookies', active: false, content: [] },
-			{ name: 'Headers', active: false, content: [] }
+			{ name: 'Params', active: true, content: { key: '', value: '' } },
+			{ name: 'Authorization', active: false, content: AuthType.None },
+			{ name: 'Headers', active: false, content: [] as TableEntry[] }
 		];
 	}
 
