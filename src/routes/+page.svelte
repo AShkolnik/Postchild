@@ -10,9 +10,6 @@
 	let input_http_method = 'GET';
 </script>
 
-<label for="url-input">URL: </label>
-<input bind:value={input_url} placeholder="Some Url" />
-
 <div class="flex h-screen">
 	<aside class="flex w-16 flex-col items-center space-y-6 bg-gray-900 py-4 text-gray-100">
 		<button class="rounded p-2 hover:bg-gray-800" title="Workspaces" aria-label="Workspaces">
