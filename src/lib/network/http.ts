@@ -21,4 +21,24 @@ interface HttpResponse {
 	headers: Header;
 }
 
+interface HttpRequest {
+	method: HttpMethod;
+	url: string;
+	headers?: Record<string, string>;
+	body?: string | object;
+	params?: Record<string, string>;
+}
+
+export const HttpMethod = {
+  Get: 'GET',
+  Post: 'POST',
+  Put: 'PUT',
+  Delete: 'DELETE',
+  Patch: 'Patch',
+  Options: 'OPTIONS',
+  HEAD: 'HEAD',
+} as const;
+
+export type HttpMethod = typeof HttpMethod[keyof typeof HttpMethod];
+
 export type { Cookie, Header, HttpResponse };

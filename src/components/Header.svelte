@@ -1,8 +1,12 @@
 <script lang="ts">
 	import { invoke } from '@tauri-apps/api/core';
+	import { http_response } from '$lib/state/store';
+	import type { HttpResponse } from '$lib/network/http';
 
 	async function request(http_method: String, url: String) {
-		const result = await invoke('request', { http_method, url });
+		const result: HttpResponse | null = await invoke('request', { http_method, url });
+		http_response.set(result);
+
 		console.log(result);
 	}
 
