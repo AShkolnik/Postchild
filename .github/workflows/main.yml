@@ -33,11 +33,13 @@ jobs:
                               squashfs-tools \
                               libayatana-appindicator3-dev \
                               librsvg2-dev \
-                              libjavascriptcoregtk-4.1-dev \
                               libglib2.0-dev \
-                              libjavascriptcoregtk-4.1-dev \
                               libsoup-3.0-dev \
-                              libwebkit2gtk-4.1-dev
+                              libwebkit2gtk-4.1-dev \
+                              gir1.2-webkit2-4.1 \
+                              gir1.2-javascriptcore-4.1 \
+                              libwebkit2gtk-4.1-0 \
+                              libjavascriptcoregtk-4.1-0
 
 
       - name: Install frontend dependencies
