@@ -15,6 +15,27 @@ It is a Svelte + TypeScript desktop application built with Tauri 2 and Rust in
    dpkg -i PostchildApp_0.1.0_amd64.deb
    ```
 
+## User Interface Presentation
+
+### Main Application Interface
+
+It provides a way to pass down a specific HTTP Method (GET, PUT, POST, DELETE are supported).
+
+![Main Application](doc/imgs/main.png)
+
+You get the HTTP-Response as plain text for now in the body tab with its HTTP-Headers in its own headers tab.
+
+![Get Request Body](doc/imgs/get_request_body.png)
+
+![Get Request Headers](doc/imgs/get_request_headers.png)
+
+The other HTTP-Methods are also working fine, with the addition of some Error Messages being displayed as well.
+
+![Malformed URL](doc/imgs/error_malformed_url.png)
+
+![Error 404 Not Found](doc/imgs/error_404.png)
+
+
 ## 🧰 Setup and Development
 
 ### Installing Dependencies
