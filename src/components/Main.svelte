@@ -84,10 +84,10 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each Object.values(response_tabs[1].content) as value}
+				{#each Object.entries(response_tabs[1].content) as [key, value]}
 					<tr>
-						<td class="p-2 text-left">{value[0]}</td>
-						<td class="p-2 text-left">{value[1]}</td>
+						<td class="p-2 text-left">{key}</td>
+						<td class="p-2 text-left">{value}</td>
 					</tr>
 				{/each}
 			</tbody>
