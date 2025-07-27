@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { AuthType } from '$lib/network/auth_type';
-	import type { Cookie, Header, HttpResponse, HttpRequest } from '$lib/network/http';
+	import type { HttpResponse, HttpRequest } from '$lib/network/http';
 	import { TableEntry } from '$lib/utils/table_entry';
-	import { http_response, http_request } from '$lib/state/store';
+	import { http_response } from '$lib/state/store';
 
 	interface ResponseTabs {
 		name: string;
 		active: boolean;
-		content: any;
+		content: string | Record<string, string>;
 	}
 
 	interface RequestTabs {
 		name: string;
 		active: boolean;
-		content: any;
+		content: string | Record<string, string>;
 	}
 
 	let response_tabs = [] as ResponseTabs[];
@@ -22,31 +22,29 @@
 	let responseJson = '';
 	let active = 'tab_params';
 
-	$: if ($http_request) {
-		request_tabs = [
-			{ name: 'Params', active: true, content: $http_request.params },
-			{ name: 'Authorization', active: false, content: $http_request.authorization },
-			{ name: 'Headers', active: false, content: $http_request.headers }
-		];
-	} else {
-		request_tabs = [
-			{ name: 'Params', active: true, content: { key: '', value: '' } },
-			{ name: 'Authorization', active: false, content: AuthType.None },
-			{ name: 'Headers', active: false, content: [] as TableEntry[] }
-		];
-	}
+	// $: if ($http_request) {
+	// 	request_tabs = [
+	// 		{ name: 'Params', active: true, content: $http_request.params },
+	// 		{ name: 'Authorization', active: false, content: $http_request.authorization },
+	// 		{ name: 'Headers', active: false, content: $http_request.headers }
+	// 	];
+	// } else {
+	// 	request_tabs = [
+	// 		{ name: 'Params', active: true, content: { key: '', value: '' } },
+	// 		{ name: 'Authorization', active: false, content: AuthType.None },
+	// 		{ name: 'Headers', active: false, content: [] as TableEntry[] }
+	// 	];
+	// }
 
 	$: if ($http_response) {
 		response_tabs = [
 			{ name: 'Body', active: true, content: $http_response.body },
-			{ name: 'Cookies', active: false, content: $http_response.cookies },
 			{ name: 'Headers', active: false, content: $http_response.headers }
 		];
 	} else {
 		response_tabs = [
 			{ name: 'Body', active: true, content: '' },
-			{ name: 'Cookies', active: false, content: [] },
-			{ name: 'Headers', active: false, content: [] }
+			{ name: 'Headers', active: false, content: {} }
 		];
 	}
 
@@ -81,34 +79,17 @@
 		<table class="min-w-full rounded border bg-white text-sm">
 			<thead>
 				<tr class="bg-gray-100">
-					{#each Object.keys(response_tabs[1].content as Cookie) as key}
-						<th class="p-2 text-left">{key}</th>
-					{/each}
+					<th class="p-2 text-left">Key</th>
+					<th class="p-2 text-left">Value</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					{#each Object.values(response_tabs[1].content as Cookie) as value}
-						<td class="p-2 text-left">{value}</td>
-					{/each}
-				</tr>
-			</tbody>
-		</table>
-	{:else if response_tabs[2].active}
-		<table class="min-w-full rounded border bg-white text-sm">
-			<thead>
-				<tr class="bg-gray-100">
-					{#each Object.keys(response_tabs[2].content as Header) as key}
-						<th class="p-2 text-left">{key}</th>
-					{/each}
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					{#each Object.values(response_tabs[1].content as Header) as value}
-						<td class="p-2 text-left">{value}</td>
-					{/each}
-				</tr>
+				{#each Object.values(response_tabs[1].content) as value}
+					<tr>
+						<td class="p-2 text-left">{value[0]}</td>
+						<td class="p-2 text-left">{value[1]}</td>
+					</tr>
+				{/each}
 			</tbody>
 		</table>
 	{/if}

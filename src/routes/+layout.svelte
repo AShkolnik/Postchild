@@ -6,10 +6,10 @@
 	let { children } = $props();
 </script>
 
-<div class="flex h-screen">
+<div class="flex h-screen overflow-hidden">
 	<Sidebar />
 	<div class="flex flex-1 flex-col">
-		<main class="flex flex-1 flex-col">
+		<main class="flex-1 overflow-y-auto p-4">
 			<Header />
 			{@render children()}
 		</main>

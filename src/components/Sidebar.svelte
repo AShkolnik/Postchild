@@ -1,4 +1,6 @@
-<aside class="flex w-16 flex-col items-center space-y-6 bg-gray-900 py-4 text-gray-100">
+<aside
+	class="flex w-16 flex-shrink-0 flex-col items-center space-y-6 bg-gray-900 py-4 text-gray-100"
+>
 	<button class="rounded p-2 hover:bg-gray-800" title="Workspaces" aria-label="Workspaces">
 		<svg
 			viewBox="0 0 24 24"

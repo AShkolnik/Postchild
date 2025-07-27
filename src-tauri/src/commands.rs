@@ -5,12 +5,12 @@
 // ) -> Result<String, reqwest::Error>
 
 use crate::utils::http_method::HttpMethod;
-use crate::network::http::HttpResponse;
 
+use serde_json::json;
 use tauri::command;
 
 #[command(rename_all = "snake_case")]
-pub async fn request(http_method: &str, url: &str) -> Result<HttpResponse, String> {
+pub async fn request(http_method: &str, url: &str) -> Result<serde_json::Value, String> {
     let url = match reqwest::Url::parse(url) {
         Ok(u) => u,
         Err(e) => return Err(format!("Invalid URL: {}", e)),
@@ -39,7 +39,7 @@ pub async fn request(http_method: &str, url: &str) -> Result<HttpResponse, Strin
                 Err(e) => return Err(format!("Failed to read response: {}", e)),
             };
 
-            Ok(HttpResponse {body, headers})
+            Ok(json!({"body": body, "headers": headers}))
         },
 
         unsupported => Err(format!("Unsupported method: {:?}", unsupported)),
