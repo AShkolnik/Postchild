@@ -4,6 +4,11 @@ Postchild
 This is the repository for Hackathon participation on the [boot.dev](https://www.boot.dev) platform. The idea is to write a smaller version of the Postman application.
 It is a Svelte + TypeScript desktop application built with Tauri 2 providing a strong backend with Rust. It is deployed and confirmed to run on Ubuntu 24.04. A release for Ubuntu 24.04 was provided.
 
+Next Features:
+- Shortkeys to url input field
+- Button for saving http response to clipboard
+- History for past requests and load HTTP-Method and URL easily
+
 Download & Run
 ---
 
