@@ -56,7 +56,10 @@
 	}
 </script>
 
-<div class="flex space-x-4 border-b">
+{#if $http_response != null}
+	<p>Status: {$http_response?.status}</p>
+{/if}
+<div class="flex-1 overflow-auto bg-gray-200 px-4 py-3">
 	{#each response_tabs as tab}
 		<button
 			class="-mb-px border-b-2 px-4 py-2 font-medium"
@@ -71,10 +74,10 @@
 			{tab.name}
 		</button>
 	{/each}
-</div>
-<div class="flex items-center gap-2 bg-gray-200 px-4 py-3">
 	{#if response_tabs[0].active}
-		{response_tabs[0].content}
+		<pre class="mt-2 max-w-full overflow-auto break-words break-all whitespace-pre-wrap">
+			{response_tabs[0].content as string}
+		</pre>
 	{:else if response_tabs[1].active}
 		<table class="min-w-full rounded border bg-white text-sm">
 			<thead>

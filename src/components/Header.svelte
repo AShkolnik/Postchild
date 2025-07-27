@@ -7,9 +7,10 @@
 		try {
 			const result: HttpResponse | null = await invoke('request', { http_method, url });
 			http_response.set(result);
-			console.log(result);
+			console.log(result?.status);
 		} catch (error) {
 			console.error('Error:', error);
+			http_response.set({ body: '', headers: {}, status: error });
 		}
 	}
 
@@ -17,7 +18,7 @@
 	let input_http_method = 'GET';
 </script>
 
-<header class="flex items-center gap-2 bg-gray-800 px-4 py-3">
+<header class="flex shrink-0 items-center gap-2 bg-gray-800 px-4 py-3">
 	<select
 		bind:value={input_http_method}
 		class="ml-2 rounded bg-blue-500 px-4 py-1 text-white transition hover:bg-blue-600"

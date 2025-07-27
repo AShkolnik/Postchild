@@ -29,6 +29,7 @@ async fn handle_get(url: reqwest::Url) -> Result<serde_json::Value, String> {
         Err(e) => return Err(format!("Request error: {}", e)),
     };
 
+    let status = response.status().as_u16();
     let headers = response
         .headers()
         .iter()
@@ -40,7 +41,7 @@ async fn handle_get(url: reqwest::Url) -> Result<serde_json::Value, String> {
         Err(e) => return Err(format!("Failed to read response: {}", e)),
     };
 
-    Ok(json!({"body": body, "headers": headers}))
+    Ok(json!({"status": status, "headers": headers, "body": body}))
 }
 
 async fn handle_post(url: reqwest::Url, body: String) -> Result<serde_json::Value, String> {

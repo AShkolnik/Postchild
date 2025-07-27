@@ -1,7 +1,7 @@
 import type { AuthType } from "./auth_type";
 
 interface HttpResponse {
-	status: number;
+	status: string | number;
 	body: string;
 	headers: Record<string, string>;
 }
