@@ -86,5 +86,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Postchild
           args: "--bundles appimage"
