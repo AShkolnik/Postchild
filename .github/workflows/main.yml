@@ -51,56 +51,55 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Install system dependencies for Tauri
+      
+      - name: Setup build environment
         run: |
-          sudo apt update
-          sudo apt install -y build-essential \
-                              curl \
-                              wget \
-                              libssl-dev \
-                              libgtk-3-dev \
-                              libwebkit2gtk-4.0-dev \
-                              libayatana-appindicator3-dev \
-                              librsvg2-dev \
-                              patchelf \
-                              libfuse2 \
-                              libsoup2.4-dev \
-                              libjavascriptcoregtk-4.0-dev
+          # Prevent interactive prompts
+          export DEBIAN_FRONTEND=noninteractive
+          
+          # Update and install basic tools
+          apt-get update
+          apt-get install -y curl wget build-essential pkg-config
+          
+          # Install Node.js
+          curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+          apt-get install -y nodejs
+          
+          # Install Rust
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
+          
+          # Add webkit 4.1 from PPA (for Ubuntu 20.04)
+          apt-get install -y software-properties-common
+          add-apt-repository -y ppa:webkit-team/ppa
+          apt-get update
+          
+          # Install Tauri dependencies
+          apt-get install -y \
+            libssl-dev \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libfuse2 \
+            file
       
-      # Create symlinks to make the build system find the libraries
-      - name: Create compatibility symlinks
+      - name: Build AppImage
         run: |
-          # Find where .pc files are located
-          PC_PATH=$(pkg-config --variable pc_path pkg-config | cut -d: -f1)
+          # Source Rust environment
+          source $HOME/.cargo/env
           
-          # Create symlinks for the build system
-          sudo ln -sf $PC_PATH/webkit2gtk-4.0.pc $PC_PATH/webkit2gtk-4.1.pc
-          sudo ln -sf $PC_PATH/javascriptcoregtk-4.0.pc $PC_PATH/javascriptcoregtk-4.1.pc
+          # Install frontend dependencies
+          npm ci
           
-          # For libsoup3, we need to handle it differently
-          echo "Checking for libsoup..."
-          pkg-config --exists libsoup-2.4 && echo "libsoup-2.4 found"
+          # Build AppImage only
+          npm run tauri build -- --bundles appimage
           
-      - name: Install frontend dependencies
-        run: npm ci
+          # Make executable
+          chmod +x src-tauri/target/release/bundle/appimage/*.AppImage
       
-      - name: Build Tauri app (AppImage only)
-        env:
-          # Force the build to use webkit 4.0
-          WEBKIT_DISABLE_COMPOSITING_MODE: 1
-        run: npm run tauri build -- --bundles appimage
-      
-      - name: Make AppImage executable
-        run: chmod +x src-tauri/target/release/bundle/appimage/*.AppImage
-      
-      - name: Upload AppImage artifact
+      - name: Upload Compatible AppImage
         uses: actions/upload-artifact@v4
         with:
-          name: Postchild
+          name: tauri-appimage-universal
           path: src-tauri/target/release/bundle/appimage/*.AppImage
