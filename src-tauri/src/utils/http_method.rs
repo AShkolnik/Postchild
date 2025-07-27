@@ -1,3 +1,4 @@
+use serde_json::json;
 use std::fmt;
 use std::str::FromStr;
 
@@ -10,23 +11,108 @@ pub enum HttpMethod {
 }
 
 impl HttpMethod {
-    pub fn handle(&self) {
+    pub async fn handle(&self, url: reqwest::Url, body: Option<String>) -> Result<serde_json::Value, String> {
         match self {
-            HttpMethod::Get => handle_get(),
-            HttpMethod::Post => handle_post(),
-            HttpMethod::Put => handle_put(),
-            HttpMethod::Delete => handle_delete(),
+            HttpMethod::Get => handle_get(url).await,
+            HttpMethod::Post => handle_post(url, body.clone().unwrap_or_default()).await,
+            HttpMethod::Put => handle_put(url, body.clone().unwrap_or_default()).await,
+            HttpMethod::Delete => handle_delete(url).await,
         }
     }
 }
 
-fn handle_get() { /* logic for GET */
+async fn handle_get(url: reqwest::Url) -> Result<serde_json::Value, String> {
+    let client = reqwest::Client::new();
+
+    let response = match client.get(url).send().await {
+        Ok(res) => res,
+        Err(e) => return Err(format!("Request error: {}", e)),
+    };
+
+    let headers = response
+        .headers()
+        .iter()
+        .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
+        .collect::<std::collections::HashMap<_, _>>();
+
+    let body = match response.text().await {
+        Ok(body) => body,
+        Err(e) => return Err(format!("Failed to read response: {}", e)),
+    };
+
+    Ok(json!({"body": body, "headers": headers}))
 }
-fn handle_post() { /* logic for POST */
+
+async fn handle_post(url: reqwest::Url, body: String) -> Result<serde_json::Value, String> {
+    let client = reqwest::Client::new();
+
+    let response = match client.post(url).body(body).send().await {
+        Ok(res) => res,
+        Err(e) => return Err(format!("Request error: {}", e)),
+    };
+
+    let status = response.status().as_u16();
+    let headers = response
+        .headers()
+        .iter()
+        .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
+        .collect::<std::collections::HashMap<_, _>>();
+
+    let body = match response.text().await {
+        Ok(body) => body,
+        Err(e) => return Err(format!("Failed to read response: {}", e)),
+    };
+
+
+    Ok(json!({"status": status, "headers": headers, "body": body}))
 }
-fn handle_put() { /* logic for PUT */
+
+async fn handle_put(url: reqwest::Url, body: String) -> Result<serde_json::Value, String> {
+    let client = reqwest::Client::new();
+
+    let response = match client.put(url).body(body).send().await {
+        Ok(res) => res,
+        Err(e) => return Err(format!("Request error: {}", e)),
+    };
+
+    let status = response.status().as_u16();
+    let headers = response
+        .headers()
+        .iter()
+        .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
+        .collect::<std::collections::HashMap<_, _>>();
+
+    let body = match response.text().await {
+        Ok(body) => body,
+        Err(e) => return Err(format!("Failed to read response: {}", e)),
+    };
+
+
+    Ok(json!({"status": status, "headers": headers, "body": body}))
 }
-fn handle_delete() { /* logic for DELETE */
+
+async fn handle_delete(url: reqwest::Url) -> Result<serde_json::Value, String> {
+    let client = reqwest::Client::new();
+
+    let response = match client.delete(url).send().await {
+        Ok(res) => res,
+        Err(e) => return Err(format!("Request error: {}", e)),
+    };
+
+    let status = response.status().as_u16();
+    let headers = response
+        .headers()
+        .iter()
+        .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
+        .collect::<std::collections::HashMap<_, _>>();
+
+    let body = match response.text().await {
+        Ok(body) => body,
+        Err(e) => return Err(format!("Failed to read response: {}", e)),
+    };
+
+
+    Ok(json!({"status": status, "headers": headers, "body": body}))
 }
 
 impl FromStr for HttpMethod {

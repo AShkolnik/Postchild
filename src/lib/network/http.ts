@@ -1,6 +1,7 @@
 import type { AuthType } from "./auth_type";
 
 interface HttpResponse {
+	status: number;
 	body: string;
 	headers: Record<string, string>;
 }
@@ -19,9 +20,6 @@ export const HttpMethod = {
   Post: 'POST',
   Put: 'PUT',
   Delete: 'DELETE',
-  Patch: 'Patch',
-  Options: 'OPTIONS',
-  HEAD: 'HEAD',
 } as const;
 
 export type HttpMethod = typeof HttpMethod[keyof typeof HttpMethod];
