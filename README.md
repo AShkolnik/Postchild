@@ -8,10 +8,11 @@ It is a Svelte + TypeScript desktop application built with Tauri 2 and Rust in
 ## 🚀 Download & Run
 
 1. Visit the [Releases](https://github.com/AShkolnik/Postchild/releases/tag/hackathon) page.
-2. Download the `PostchildApp.deb` for Ubuntu 24.04.
-3. Install it:
+2. Download the `Postchild-deb.zip` for Ubuntu 24.04.
+3. Unzip it
+4. Install it:
    ```bash
-   dpkg -i PostchildApp.deb
+   dpkg -i PostchildApp_0.1.0_amd64.deb
    ```
 
 ## 🧰 Setup and Development
