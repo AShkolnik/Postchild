@@ -3,43 +3,37 @@
 This is the repository for the Hackathon participation on the [boot.dev](https://www.boot.dev) platform. The idea is to write a smaller version of Postman application.
 For those not familiar with Postman, to simplify it, it's an application for testing API Endpoints with POST and GET requests and add visualisation to it, store the requests and responses in files and more. Postchild will try to replicate some of the most used features.
 
-The application is written with the Tauri Framework with Svelte for the frontend using TailWindCSS and Rust for the backend.
+It is a Svelte + TypeScript desktop application built with Tauri 2 and Rust in its backend. It is deployed and confirmed to run on Ubuntu 24.04. A built artifact *.deb can be downloaded and installed on said distribution.
 
-# sv
+## 🚀 Download & Run
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+1. Visit the [Releases](https://github.com/Ashkolnik/Postchild/releases) page.
+2. Download the `PostchildApp.deb` for Ubuntu 24.04.
+3. Install it:
+   ```bash
+   dpkg -i PostchildApp.deb
+   ```
 
-## Creating a project
+## 🧰 Setup and Development
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Installing Dependencies
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+sudo apt update
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libayatana-appindicator3-dev librsvg2-dev
 ```
 
-## Building
-
-To create a production version of your app:
+### Building Frontend & Backend
 
 ```bash
-npm run build
+npm install
+npm run tauri dev
 ```
 
-You can preview the production build with `npm run preview`.
+1. Installs TypeScript, Svelte, front-end dependencies. 
+2. Compiles Rust backend and launches the app
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## 🔧 Troubleshooting Notes
+
+- glibc compatibility: You must build on Ubuntu 24.04 if that's the target runtime environment. Building on newer systems may break on older ones due to mismatched glibc versions 
+- WebKit/WebView: Make sure libwebkit2gtk‑4.1 is installed on both build and target machines.
