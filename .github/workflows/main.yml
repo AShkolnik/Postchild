@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v3
@@ -33,6 +33,7 @@ jobs:
                               squashfs-tools \
                               libayatana-appindicator3-dev \
                               librsvg2-dev \
+                              libjavascriptcoregtk-4.1-dev \
                               libjavascriptcoregtk-4.0-dev \
                               libsoup-3.0-dev
 
