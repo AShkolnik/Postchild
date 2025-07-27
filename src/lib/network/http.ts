@@ -9,10 +9,7 @@ interface HttpResponse {
 interface HttpRequest {
 	method: HttpMethod;
 	url: string;
-	authorization: AuthType;
-	headers?: Record<string, string>;
-	body?: string | object;
-	params?: Record<'key' | 'value', string>;
+	body: string | null;
 }
 
 export const HttpMethod = {

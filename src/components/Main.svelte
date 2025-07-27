@@ -2,7 +2,7 @@
 	import { AuthType } from '$lib/network/auth_type';
 	import type { HttpResponse, HttpRequest } from '$lib/network/http';
 	import { TableEntry } from '$lib/utils/table_entry';
-	import { http_response } from '$lib/state/store';
+	import { http_response, http_request } from '$lib/state/store';
 
 	interface ResponseTabs {
 		name: string;
@@ -22,20 +22,6 @@
 	let responseJson = '';
 	let active = 'tab_params';
 
-	// $: if ($http_request) {
-	// 	request_tabs = [
-	// 		{ name: 'Params', active: true, content: $http_request.params },
-	// 		{ name: 'Authorization', active: false, content: $http_request.authorization },
-	// 		{ name: 'Headers', active: false, content: $http_request.headers }
-	// 	];
-	// } else {
-	// 	request_tabs = [
-	// 		{ name: 'Params', active: true, content: { key: '', value: '' } },
-	// 		{ name: 'Authorization', active: false, content: AuthType.None },
-	// 		{ name: 'Headers', active: false, content: [] as TableEntry[] }
-	// 	];
-	// }
-
 	$: if ($http_response) {
 		response_tabs = [
 			{ name: 'Body', active: true, content: $http_response.body },
@@ -54,7 +40,30 @@
 			active: tab.name === name
 		}));
 	}
+
+	let isCollapsed = false;
+
+	$: body = $http_request?.body ?? '';
+
+	function updateBody(value: string) {
+		http_request.set({ body: value } as HttpRequest);
+	}
 </script>
+
+<div class="space-y-2 rounded-2xl border p-4 shadow">
+	<button class="w-full text-left font-semibold" on:click={() => (isCollapsed = !isCollapsed)}>
+		{isCollapsed ? '▶ Body' : '▼ Body'}
+	</button>
+
+	{#if !isCollapsed}
+		<textarea
+			class="h-40 w-full resize-none rounded border p-2"
+			value={body as string}
+			on:input={(e) => updateBody(e.currentTarget.value)}
+			placeholder="Request body..."
+		></textarea>
+	{/if}
+</div>
 
 {#if $http_response != null}
 	<p>Status: {$http_response?.status}</p>

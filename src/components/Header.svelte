@@ -1,20 +1,21 @@
 <script lang="ts">
 	import { invoke } from '@tauri-apps/api/core';
-	import { http_response } from '$lib/state/store';
+	import { http_response, http_request } from '$lib/state/store';
 	import type { HttpResponse } from '$lib/network/http';
 
-	async function request(http_method: String, url: String) {
+	async function request(http_method: string, url: string, body: string | null) {
 		try {
-			const result: HttpResponse | null = await invoke('request', { http_method, url });
+			console.log(http_method, url, body);
+			const result: HttpResponse | null = await invoke('request', { http_method, url, body });
 			http_response.set(result);
 			console.log(result?.status);
 		} catch (error) {
 			console.error('Error:', error);
-			http_response.set({ body: '', headers: {}, status: error });
+			http_response.set({ body: '', headers: {}, status: error as string });
 		}
 	}
 
-	let input_url = '';
+	let input_url = 'https://';
 	let input_http_method = 'GET';
 </script>
 
@@ -36,6 +37,7 @@
 	/>
 	<button
 		class="ml-2 rounded bg-blue-600 px-4 py-1 text-white transition hover:bg-blue-700"
-		on:click={() => request(input_http_method, input_url)}>Send</button
+		on:click={() => request(input_http_method, input_url, $http_request?.body as string | null)}
+		>Send</button
 	>
 </header>
