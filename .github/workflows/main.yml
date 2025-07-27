@@ -1,0 +1,47 @@
+name: Build Tauri DEB
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js 24.4.1
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.4.1
+
+      - name: Set up Rust 1.88
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.88.0
+
+      - name: Install system dependencies for Tauri
+        run: |
+          sudo apt update
+          sudo apt install -y libwebkit2gtk-4.0-dev \
+                              build-essential \
+                              curl \
+                              wget \
+                              libssl-dev \
+                              libgtk-3-dev \
+                              squashfs-tools \
+                              libayatana-appindicator3-dev \
+                              librsvg2-dev
+
+      - name: Install frontend dependencies
+        run: npm ci  # Use `npm install` if no lockfile exists
+
+      - name: Build Tauri app
+        run: npm run tauri build
+
+      - name: Upload DEB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-deb
+          path: src-tauri/target/release/bundle/deb/*.deb
