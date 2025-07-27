@@ -23,7 +23,6 @@ jobs:
 
       - name: Install system dependencies for Tauri
         run: |
-          sudo add-apt-repository ppa:webkit-team/ppa -y
           sudo apt update
           sudo apt install -y build-essential \
                               curl \
