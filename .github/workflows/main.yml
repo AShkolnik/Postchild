@@ -3,25 +3,20 @@ name: Build Tauri DEB
 on:
   push:
     branches: [ main ]
-
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-24.04
-
     steps:
       - uses: actions/checkout@v3
-
       - name: Set up Node.js 24.4.1
         uses: actions/setup-node@v4
         with:
           node-version: 24.4.1
-
       - name: Set up Rust 1.88
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: 1.88.0
-
       - name: Install system dependencies for Tauri
         run: |
           sudo apt update
@@ -39,17 +34,22 @@ jobs:
                               gir1.2-webkit2-4.1 \
                               gir1.2-javascriptcore-4.1 \
                               libwebkit2gtk-4.1-0 \
-                              libjavascriptcoregtk-4.1-0
-
-
+                              libjavascriptcoregtk-4.1-0 \
+                              libfuse2 \
+                              patchelf  # CHANGED: Added these 2 packages for AppImage
       - name: Install frontend dependencies
         run: npm ci  # Use `npm install` if no lockfile exists
-
       - name: Build Tauri app
-        run: npm run tauri build
-
+        run: npm run tauri build -- --bundles deb,appimage  # CHANGED: Added appimage to bundles
+      - name: Make AppImage executable  # NEW STEP
+        run: chmod +x src-tauri/target/release/bundle/appimage/*.AppImage
       - name: Upload DEB artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-deb
+          name: Postchild
           path: src-tauri/target/release/bundle/deb/*.deb
+      - name: Upload AppImage artifact  # NEW STEP
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-appimage
+          path: src-tauri/target/release/bundle/appimage/*.AppImage
